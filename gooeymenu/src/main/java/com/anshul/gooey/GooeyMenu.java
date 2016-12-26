@@ -1,4 +1,4 @@
-package android.anshul.com.gooeymenu;
+package com.anshul.gooey;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
@@ -20,6 +20,8 @@ import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AnticipateOvershootInterpolator;
 import android.view.animation.LinearInterpolator;
+
+import com.android.gooeymenu.R;
 
 import java.util.ArrayList;
 import java.util.List;
