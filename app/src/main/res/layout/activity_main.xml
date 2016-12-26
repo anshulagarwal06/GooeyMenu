@@ -9,7 +9,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity">
 
-    <android.anshul.com.gooeymenu.GooeyMenu
+    <com.anshul.gooey.GooeyMenu
         android:id="@+id/gooey_menu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
