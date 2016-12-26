@@ -21,3 +21,26 @@ Inspired by this [dribbble](https://dribbble.com/shots/1936758-GIF-of-the-Tap-Ba
 
 
 also,you can set the menu's icon:
+
+# Download
+
+Include `jitpack.io` inside of **root** project `build.gradle`:
+
+```groovy
+allprojects {
+		repositories {
+			...
+			maven { url "https://jitpack.io" }
+		}
+	}
+```
+
+After that you can easily include the library in your **app** `build.gradle`:
+
+```groovy
+dependencies {
+	        compile 'com.github.anshulagarwal06:GooeyMenu:-SNAPSHOT'
+	}
+```
+
+That's it. build your project.
