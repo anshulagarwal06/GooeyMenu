@@ -63,6 +63,7 @@ public class GooeyMenu extends View {
     public static final int[] STATE_PRESSED =
             {android.R.attr.state_enabled, -android.R.attr.state_active,
                     android.R.attr.state_pressed};
+    private boolean mShowMenuOnStart = true;
 
     public GooeyMenu(Context context) {
         super(context);
@@ -95,9 +96,11 @@ public class GooeyMenu extends View {
 
 
                 mNumberOfMenu = typedArray.getInt(R.styleable.GooeyMenu_no_of_menu, DEFUALT_MENU_NO);
-                mFabButtonRadius = (int) typedArray.getDimension(R.styleable.GooeyMenu_fab_radius, getResources().getDimension(R.dimen.big_circle_radius));
-                mMenuButtonRadius = (int) typedArray.getDimension(R.styleable.GooeyMenu_menu_radius, getResources().getDimension(R.dimen.small_circle_radius));
-                mGab = (int) typedArray.getDimension(R.styleable.GooeyMenu_gap_between_menu_fab, getResources().getDimensionPixelSize(R.dimen.min_gap));
+                mFabButtonRadius = (int) typedArray.getDimensionPixelOffset(R.styleable.GooeyMenu_fab_radius, getResources().getDimensionPixelOffset(R.dimen.big_circle_radius));
+                mMenuButtonRadius = (int) typedArray.getDimensionPixelOffset(R.styleable.GooeyMenu_menu_radius, getResources().getDimensionPixelOffset(R.dimen.small_circle_radius));
+                mGab = (int) typedArray.getDimensionPixelOffset(R.styleable.GooeyMenu_gap_between_menu_fab, getResources().getDimensionPixelSize(R.dimen.min_gap));
+                mShowMenuOnStart = typedArray.getBoolean(R.styleable.GooeyMenu_menu_visible_on_start, true);
+                isMenuVisible = mShowMenuOnStart;
 
                 TypedValue outValue = new TypedValue();
                 // Read array of target drawables
@@ -120,13 +123,16 @@ public class GooeyMenu extends View {
         }
 
         mCirclePaint = new Paint();
-        mCirclePaint.setColor(getResources().getColor(R.color.default_color));
+        mCirclePaint.setColor(getResources().getColor(R.color.color_orange));
         mCirclePaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        mCirclePaint.setAntiAlias(true);
+
 
         mCircleBorder = new Paint(mCirclePaint);
         mCircleBorder.setStyle(Paint.Style.STROKE);
-        mCircleBorder.setStrokeWidth(1f);
-        mCircleBorder.setColor(getResources().getColor(R.color.default_color_dark));
+        mCircleBorder.setStrokeWidth(2f);
+        mCircleBorder.setAntiAlias(true);
+        mCircleBorder.setColor(getResources().getColor(android.R.color.white));
 
         mBezierEndAnimation = ValueAnimator.ofFloat(BEZIER_CONSTANT + .2f, BEZIER_CONSTANT);
         mBezierEndAnimation.setInterpolator(new LinearInterpolator());
@@ -199,7 +205,7 @@ public class GooeyMenu extends View {
         mCenterY = h - mFabButtonRadius;
         for (int i = 0; i < mNumberOfMenu; i++) {
             CirclePoint circlePoint = new CirclePoint();
-            circlePoint.setRadius(mGab);
+            circlePoint.setRadius(isMenuVisible ? mGab : 0);
             circlePoint.setAngle((Math.PI / (mNumberOfMenu + 1)) * (i + 1));
             mMenuPoints.add(circlePoint);
             ObjectAnimator animShow = ObjectAnimator.ofFloat(mMenuPoints.get(i), "Radius", 0f, mGab);
@@ -224,7 +230,7 @@ public class GooeyMenu extends View {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        mPlusBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.plus);
+        mPlusBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.logo_cardmap);
     }
 
     @Override
@@ -246,7 +252,19 @@ public class GooeyMenu extends View {
             CirclePoint circlePoint = mMenuPoints.get(i);
             float x = (float) (circlePoint.radius * Math.cos(circlePoint.angle));
             float y = (float) (circlePoint.radius * Math.sin(circlePoint.angle));
-            canvas.drawCircle(x + mCenterX, mCenterY - y, mMenuButtonRadius, mCirclePaint);
+            Paint paint = new Paint(mCirclePaint);
+            if (i == 0) {
+                paint.setColor(getResources().getColor(R.color.color_yellow));
+            } else if (i == 1) {
+                paint.setColor(getResources().getColor(R.color.color_orange));
+            } else if (i == 2) {
+                paint.setColor(getResources().getColor(R.color.color_grey));
+            }else if(i==3){
+                paint.setColor(getResources().getColor(R.color.color_blue));
+            }
+            canvas.drawCircle(x + mCenterX, mCenterY - y, mMenuButtonRadius, paint);
+            canvas.drawCircle(x + mCenterX, mCenterY - y, mMenuButtonRadius, mCircleBorder);
+
             if (i < mDrawableArray.size()) {
                 canvas.save();
                 canvas.translate(x + mCenterX - mMenuButtonRadius / 2, mCenterY - y - mMenuButtonRadius / 2);
@@ -260,6 +278,9 @@ public class GooeyMenu extends View {
         canvas.drawPath(path, mCirclePaint);
         canvas.drawPath(path, mCircleBorder);
         canvas.rotate(mRotationAngle);
+       /* Drawable drawable=getResources().getDrawable(R.drawable.icon_beta);
+        drawable.setBounds(0,0,drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+        drawable.draw(canvas);*/
         canvas.drawBitmap(mPlusBitmap, -mPlusBitmap.getWidth() / 2, -mPlusBitmap.getHeight() / 2, mCirclePaint);
         canvas.restore();
     }
@@ -330,6 +351,9 @@ public class GooeyMenu extends View {
                         }
                         if (mGooeyMenuInterface != null) {
                             mGooeyMenuInterface.menuItemClicked(menuItem);
+                            startHideAnimate();
+                            isMenuVisible = false;
+                            mGooeyMenuInterface.menuClose();
                         }
                         return true;
                     }

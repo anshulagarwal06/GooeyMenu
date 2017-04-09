@@ -7,5 +7,7 @@
         <attr name="menu_radius" format="dimension" />
         <attr name="gap_between_menu_fab" format="dimension" />
         <attr name="menu_drawable" format="reference" />
+        <attr name="menu_visible_on_start" format="boolean" />
+
     </declare-styleable>
 </resources>

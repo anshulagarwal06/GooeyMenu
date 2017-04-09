@@ -4,4 +4,9 @@
     <color name="default_color">#02a6d8</color>
     <color name="default_color_dark">#52a6b8</color>
     <color name="color_red">#FF0000</color>
+
+    <color name="color_yellow">#F5B00C</color>
+    <color name="color_grey">#6E656F</color>
+    <color name="color_orange">#F06214</color>
+    <color name="color_blue">#6739FE</color>
 </resources>

@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-
     <array name="drawable_array">
 
-        <item>@drawable/item_selector</item>
-        <item>@drawable/selector_video</item>
-        <item>@drawable/selector_audio</item>
-        <item>@drawable/selector_photo</item>
-        <item>@drawable/selector_doc</item>
+        <item>@drawable/map</item>
+        <item>@drawable/ic_action_name</item>
+        <item>@drawable/info</item>
+        <item>@drawable/ic_action_name</item>
+    </array>
+
+    <array name="color_array">
+        <item>@color/color_yellow</item>
+        <item>@color/color_orange</item>
+        <item>@color/color_grey</item>
+        <item>@color/color_blue</item>
     </array>
 </resources>

@@ -7,6 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/default_color_dark"
     tools:context=".MainActivity">
 
     <com.anshul.gooey.GooeyMenu
@@ -15,8 +16,9 @@
         android:layout_height="match_parent"
         app:fab_radius="@dimen/big_circle_radius"
         app:gap_between_menu_fab="@dimen/min_gap"
+        app:menu_drawable="@array/drawable_array"
         app:menu_radius="@dimen/small_circle_radius"
-        app:no_of_menu="5"
-        app:menu_drawable="@array/drawable_array"/>
+        app:menu_visible_on_start="false"
+        app:no_of_menu="4" />
 
 </RelativeLayout>
