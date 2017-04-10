@@ -9,7 +9,7 @@
         <attr name="menu_drawable" format="reference" />
         <attr name="menu_visible_on_start" format="boolean" />
         <attr name="gooey_colors" format="reference" />
-        <attr name="center_menu_src" format="integer" />
+        <attr name="fab_menu_src" format="integer" />
 
     </declare-styleable>
 </resources>

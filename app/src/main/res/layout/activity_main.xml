@@ -14,7 +14,7 @@
         android:id="@+id/gooey_menu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:center_menu_src="@drawable/logo_cardmap"
+        app:fab_menu_src="@drawable/logo_cardmap"
         app:fab_radius="@dimen/big_circle_radius"
         app:gap_between_menu_fab="@dimen/min_gap"
         app:gooey_colors="@array/color_array"

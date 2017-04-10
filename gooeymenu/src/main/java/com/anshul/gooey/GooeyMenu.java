@@ -103,7 +103,7 @@ public class GooeyMenu extends View {
                 mMenuButtonRadius = (int) typedArray.getDimensionPixelOffset(R.styleable.GooeyMenu_menu_radius, getResources().getDimensionPixelOffset(R.dimen.small_circle_radius));
                 mGab = (int) typedArray.getDimensionPixelOffset(R.styleable.GooeyMenu_gap_between_menu_fab, getResources().getDimensionPixelSize(R.dimen.min_gap));
                 mShowMenuOnStart = typedArray.getBoolean(R.styleable.GooeyMenu_menu_visible_on_start, true);
-                mMenuRes = typedArray.getResourceId(R.styleable.GooeyMenu_center_menu_src, R.drawable.plus);
+                mMenuRes = typedArray.getResourceId(R.styleable.GooeyMenu_fab_menu_src, R.drawable.plus);
                 isMenuVisible = mShowMenuOnStart;
 
                 TypedValue outValue = new TypedValue();
