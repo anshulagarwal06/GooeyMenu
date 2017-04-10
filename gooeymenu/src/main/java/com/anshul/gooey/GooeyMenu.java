@@ -9,7 +9,6 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.drawable.Drawable;
@@ -64,6 +63,10 @@ public class GooeyMenu extends View {
             {android.R.attr.state_enabled, -android.R.attr.state_active,
                     android.R.attr.state_pressed};
     private boolean mShowMenuOnStart = true;
+    @android.support.annotation.ColorInt
+    private int mMenuColor;
+    private ArrayList<Integer> mMenuItemColorArray;
+    private int mMenuRes = R.drawable.plus;
 
     public GooeyMenu(Context context) {
         super(context);
@@ -100,6 +103,7 @@ public class GooeyMenu extends View {
                 mMenuButtonRadius = (int) typedArray.getDimensionPixelOffset(R.styleable.GooeyMenu_menu_radius, getResources().getDimensionPixelOffset(R.dimen.small_circle_radius));
                 mGab = (int) typedArray.getDimensionPixelOffset(R.styleable.GooeyMenu_gap_between_menu_fab, getResources().getDimensionPixelSize(R.dimen.min_gap));
                 mShowMenuOnStart = typedArray.getBoolean(R.styleable.GooeyMenu_menu_visible_on_start, true);
+                mMenuRes = typedArray.getResourceId(R.styleable.GooeyMenu_center_menu_src, R.drawable.plus);
                 isMenuVisible = mShowMenuOnStart;
 
                 TypedValue outValue = new TypedValue();
@@ -115,6 +119,28 @@ public class GooeyMenu extends View {
                     array.recycle();
                 }
 
+                //get colors array;
+
+                TypedValue colorArray = new TypedValue();
+
+                if (typedArray.getValue(R.styleable.GooeyMenu_gooey_colors, colorArray)) {
+
+                    Resources res = getContext().getResources();
+                    TypedArray array = res.obtainTypedArray(colorArray.resourceId);
+                    mMenuItemColorArray = new ArrayList<Integer>();
+
+                    for (int i = 0; i < array.length(); i++) {
+                        TypedValue value = array.peekValue(i);
+                        if (i == 0) {
+                            mMenuColor = getResources().getColor(value != null ? value.resourceId : 0);
+                        } else {
+                            mMenuItemColorArray.add(getResources().getColor(value != null ? value.resourceId : 0));
+                        }
+                    }
+                    array.recycle();
+                }
+
+
             } finally {
                 typedArray.recycle();
                 typedArray = null;
@@ -123,7 +149,7 @@ public class GooeyMenu extends View {
         }
 
         mCirclePaint = new Paint();
-        mCirclePaint.setColor(getResources().getColor(R.color.color_orange));
+        mCirclePaint.setColor(mMenuColor != 0 ? mMenuColor : getResources().getColor(R.color.color_orange));
         mCirclePaint.setStyle(Paint.Style.FILL_AND_STROKE);
         mCirclePaint.setAntiAlias(true);
 
@@ -230,7 +256,7 @@ public class GooeyMenu extends View {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        mPlusBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.logo_cardmap);
+        mPlusBitmap = BitmapFactory.decodeResource(getResources(), mMenuRes);
     }
 
     @Override
@@ -259,8 +285,11 @@ public class GooeyMenu extends View {
                 paint.setColor(getResources().getColor(R.color.color_orange));
             } else if (i == 2) {
                 paint.setColor(getResources().getColor(R.color.color_grey));
-            }else if(i==3){
+            } else if (i == 3) {
                 paint.setColor(getResources().getColor(R.color.color_blue));
+            }
+            if (i < mMenuItemColorArray.size()) {
+                paint.setColor(mMenuItemColorArray.get(i));
             }
             canvas.drawCircle(x + mCenterX, mCenterY - y, mMenuButtonRadius, paint);
             canvas.drawCircle(x + mCenterX, mCenterY - y, mMenuButtonRadius, mCircleBorder);

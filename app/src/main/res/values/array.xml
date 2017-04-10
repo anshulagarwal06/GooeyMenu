@@ -11,6 +11,7 @@
 
     <array name="color_array">
         <item>@color/color_yellow</item>
+        <item>@color/color_yellow</item>
         <item>@color/color_orange</item>
         <item>@color/color_grey</item>
         <item>@color/color_blue</item>
