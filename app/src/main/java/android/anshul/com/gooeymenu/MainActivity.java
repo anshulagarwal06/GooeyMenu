@@ -53,7 +53,7 @@ public class MainActivity extends ActionBarActivity implements GooeyMenu.GooeyMe
 
     @Override
     public void menuClose() {
-        showToast( "Menu Close");
+        //showToast( "Menu Close");
     }
 
     @Override
