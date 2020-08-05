@@ -3,13 +3,13 @@ package com.anshul.gooey;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.drawable.Drawable;
@@ -28,15 +28,14 @@ import java.util.List;
 
 /**
  * Created by Anshul on 24/06/15.
+ * Updated by Cyb3rKo on 05/08/20
  */
 public class GooeyMenu extends View {
 
     private static final long ANIMATION_DURATION = 1000;
-    private static final int DEFUALT_MENU_NO = 5;
-    private final float START_ANGLE = 0f;
-    private final float END_ANGLE = 45f;
-    private int mNumberOfMenu;//Todo
-    private final float BEZIER_CONSTANT = 0.551915024494f;// pre-calculated value
+    private static final int DEFAULT_MENU_NO = 5;
+    private int mNumberOfMenu;
+    private final float BEZIER_CONSTANT = 0.551915024494f; // pre-calculated value
 
     private int mFabButtonRadius;
     private int mMenuButtonRadius;
@@ -54,7 +53,6 @@ public class GooeyMenu extends View {
     private float mRotationAngle;
     private ValueAnimator mRotationReverseAnimation;
     private GooeyMenuInterface mGooeyMenuInterface;
-    private boolean gooeyMenuTouch;
     private Paint mCircleBorder;
     private List<Drawable> mDrawableArray;
 
@@ -74,7 +72,6 @@ public class GooeyMenu extends View {
         init(attrs);
     }
 
-
     public GooeyMenu(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(attrs);
@@ -91,10 +88,9 @@ public class GooeyMenu extends View {
                     attrs,
                     R.styleable.GooeyMenu,
                     0, 0);
+
             try {
-
-
-                mNumberOfMenu = typedArray.getInt(R.styleable.GooeyMenu_no_of_menu, DEFUALT_MENU_NO);
+                mNumberOfMenu = typedArray.getInt(R.styleable.GooeyMenu_no_of_menu, DEFAULT_MENU_NO);
                 mFabButtonRadius = (int) typedArray.getDimension(R.styleable.GooeyMenu_fab_radius, getResources().getDimension(R.dimen.big_circle_radius));
                 mMenuButtonRadius = (int) typedArray.getDimension(R.styleable.GooeyMenu_menu_radius, getResources().getDimension(R.dimen.small_circle_radius));
                 mGab = (int) typedArray.getDimension(R.styleable.GooeyMenu_gap_between_menu_fab, getResources().getDimensionPixelSize(R.dimen.min_gap));
@@ -140,6 +136,8 @@ public class GooeyMenu extends View {
         mBezierAnimation.addUpdateListener(mBezierUpdateListener);
         mBezierAnimation.addListener(mBezierAnimationListener);
 
+        float START_ANGLE = 0f;
+        float END_ANGLE = 45f;
         mRotationAnimation = ValueAnimator.ofFloat(START_ANGLE, END_ANGLE);
         mRotationAnimation.setDuration(ANIMATION_DURATION / 4);
         mRotationAnimation.setInterpolator(new AccelerateInterpolator());
@@ -197,6 +195,7 @@ public class GooeyMenu extends View {
         super.onSizeChanged(w, h, oldw, oldh);
         mCenterX = w / 2;
         mCenterY = h - mFabButtonRadius;
+
         for (int i = 0; i < mNumberOfMenu; i++) {
             CirclePoint circlePoint = new CirclePoint();
             circlePoint.setRadius(mGab);
@@ -214,8 +213,9 @@ public class GooeyMenu extends View {
             mHideAnimation.add(animHide);
 
             if (mDrawableArray != null) {
-                for (Drawable drawable : mDrawableArray)
-                    drawable.setBounds(0, 0, /*2 * */mMenuButtonRadius,/* 2 * */mMenuButtonRadius);
+                for (Drawable drawable : mDrawableArray) {
+                    drawable.setBounds(0, 0, /* 2 * */mMenuButtonRadius,/* 2 * */mMenuButtonRadius);
+                }
             }
         }
 
@@ -235,7 +235,7 @@ public class GooeyMenu extends View {
         mHideAnimation.clear();
         mHideAnimation = null;
         mShowAnimation.clear();
-        mHideAnimation = null;
+        mShowAnimation = null;
     }
 
     @Override
@@ -249,7 +249,7 @@ public class GooeyMenu extends View {
             canvas.drawCircle(x + mCenterX, mCenterY - y, mMenuButtonRadius, mCirclePaint);
             if (i < mDrawableArray.size()) {
                 canvas.save();
-                canvas.translate(x + mCenterX - mMenuButtonRadius / 2, mCenterY - y - mMenuButtonRadius / 2);
+                canvas.translate(x + mCenterX - mMenuButtonRadius / 2f, mCenterY - y - mMenuButtonRadius / 2f);
                 mDrawableArray.get(i).draw(canvas);
                 canvas.restore();
             }
@@ -260,7 +260,7 @@ public class GooeyMenu extends View {
         canvas.drawPath(path, mCirclePaint);
         canvas.drawPath(path, mCircleBorder);
         canvas.rotate(mRotationAngle);
-        canvas.drawBitmap(mPlusBitmap, -mPlusBitmap.getWidth() / 2, -mPlusBitmap.getHeight() / 2, mCirclePaint);
+        canvas.drawBitmap(mPlusBitmap, -mPlusBitmap.getWidth() / 2f, -mPlusBitmap.getHeight() / 2f, mCirclePaint);
         canvas.restore();
     }
 
@@ -284,6 +284,7 @@ public class GooeyMenu extends View {
         return path;
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
@@ -335,13 +336,11 @@ public class GooeyMenu extends View {
                     }
                 }
                 return false;
-
         }
         return true;
     }
 
     private int isMenuItemTouched(MotionEvent event) {
-
         if (!isMenuVisible) {
             return -1;
         }
@@ -366,15 +365,13 @@ public class GooeyMenu extends View {
 
     public boolean isGooeyMenuTouch(MotionEvent event) {
         if (event.getX() >= mCenterX - mFabButtonRadius && event.getX() <= mCenterX + mFabButtonRadius) {
-            if (event.getY() >= mCenterY - mFabButtonRadius && event.getY() <= mCenterY + mFabButtonRadius) {
-                return true;
-            }
+            return event.getY() >= mCenterY - mFabButtonRadius && event.getY() <= mCenterY + mFabButtonRadius;
         }
         return false;
     }
 
     // Helper class for animation and Menu Item cicle center Points
-    public class CirclePoint {
+    public static class CirclePoint {
         private float x;
         private float y;
         private float radius = 0.0f;
@@ -479,7 +476,6 @@ public class GooeyMenu extends View {
 
         }
     };
-
 
     public interface GooeyMenuInterface {
         /**
