@@ -72,7 +72,6 @@ public class GooeyMenu extends View {
         init(attrs);
     }
 
-
     public GooeyMenu(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(attrs);
